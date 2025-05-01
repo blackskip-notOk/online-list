@@ -1,0 +1,31 @@
+.logo {
+  width: var(--size-64);
+  height: var(--size-64);
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: max-content;
+  grid-auto-columns: 1fr;
+  column-gap: var(--gap-16);
+  justify-items: center;
+}
+
+.link {
+  color: lawngreen;
+}
+
+.link-active {
+  color: aqua;
+}
+
+.link-icon {
+  width: var(--size-16);
+  height: var(--size-16);
+}
+
+.link-icon-active {
+  width: var(--size-16);
+  height: var(--size-16);
+}

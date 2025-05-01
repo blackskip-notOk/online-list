@@ -2,5 +2,7 @@
   --background-color: hsl(34, 64%, 98%);
   --gap-8: 8px;
   --gap-16: 16px;
-  --gap-32: 32px; 
+  --gap-32: 32px;
+  --size-16: 16px;
+  --size-64: 64px;
 }

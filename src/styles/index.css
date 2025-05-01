@@ -2,6 +2,12 @@
 @import "vars.css";
 
 body {
+  font-family: 'Slovic Variable', Helvetica, Arial, sans-serif;
+  font-variation-settings: "STLE" 82;
   margin: 0;
   background-color: var(--background-color);
+
+  a {
+    text-decoration: none;
+  }
 }

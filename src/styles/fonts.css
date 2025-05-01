@@ -2,8 +2,3 @@
     font-family: Slovic Variable;
     src: url('../assets/fonts/Slovic_Demo_VarGX.ttf');
 }
-
-body {
-    font-family: 'Slovic Variable', Helvetica, Arial, sans-serif;
-    font-variation-settings: "STLE" 82;
-}
