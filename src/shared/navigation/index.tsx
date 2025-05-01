@@ -1,10 +1,18 @@
 import { Link } from "@tanstack/react-router";
 
-export const Navigation = () => {
+interface NavigationProps {
+  className?: string;
+}
+
+export const Navigation = ({ className }: NavigationProps) => {
   return (
-    <nav>
+    <div className={className}>
+    <div>LOGO</div>
+    <nav >
       <Link to="/">Мои персонажи</Link>
       <Link to="/spells">spells</Link>
     </nav>
+      <div>PROFILE</div>
+      </div>
   );
 };

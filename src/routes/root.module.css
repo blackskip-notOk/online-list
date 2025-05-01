@@ -1,6 +1,31 @@
 .main {
   display: grid;
+  grid-template-areas:
+  "navbar"
+  "page"
+  "footer";
+  grid-template-rows: max-content 1fr max-content;
   margin: auto;
   height: 100vh;
   max-width: 1600px;
+}
+
+.nav {
+  grid-area: navbar;
+  display: grid;
+  grid-template-rows: max-content;
+  grid-template-columns: max-content 1fr max-content;
+  padding: var(--gap-8) var(--gap-16);
+  column-gap: var(--gap-16);
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+}
+
+.page {
+  grid-area: page;
+}
+
+.footer {
+  grid-area: footer;
 }
