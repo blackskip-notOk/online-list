@@ -1,6 +1,6 @@
 .logo {
-  width: var(--size-64);
-  height: var(--size-64);
+  width: 64px;
+  height: 64px;
 }
 
 .nav {
@@ -8,7 +8,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: max-content;
   grid-auto-columns: 1fr;
-  column-gap: var(--gap-16);
+  column-gap: 16px;
   justify-items: center;
 }
 
@@ -21,11 +21,11 @@
 }
 
 .link-icon {
-  width: var(--size-16);
-  height: var(--size-16);
+  width: 16px;
+  height: 16px;
 }
 
 .link-icon-active {
-  width: var(--size-16);
-  height: var(--size-16);
+  width: 16px;
+  height: 16px;
 }
