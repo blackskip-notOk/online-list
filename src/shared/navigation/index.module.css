@@ -1,31 +1,31 @@
 .logo {
-  width: 64px;
-  height: 64px;
+	width: 64px;
+	height: 64px;
 }
 
 .nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: max-content;
-  grid-auto-columns: 1fr;
-  column-gap: 16px;
-  justify-items: center;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: max-content;
+	grid-auto-columns: 1fr;
+	column-gap: 16px;
+	justify-items: center;
 }
 
 .link {
-  color: lawngreen;
+	color: lawngreen;
 }
 
 .link-active {
-  color: aqua;
+	color: aqua;
 }
 
 .link-icon {
-  width: 16px;
-  height: 16px;
+	width: 16px;
+	height: 16px;
 }
 
 .link-icon-active {
-  width: 16px;
-  height: 16px;
+	width: 16px;
+	height: 16px;
 }
