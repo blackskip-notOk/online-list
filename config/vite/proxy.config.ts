@@ -1,13 +1,3 @@
-/*
- * Copyright (c) Nexign, JSC, 2022-2023.
- */
-/**
- *
- * @author Ilya Babanov
- * @version 1.0.0
- * @since 1.0.0
- */
-
 import type { ProxyOptions } from 'vite';
 import { loadEnv } from 'vite';
 

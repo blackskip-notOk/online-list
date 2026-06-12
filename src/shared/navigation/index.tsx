@@ -21,6 +21,13 @@ const options = linkOptions([
 			iconSrc: '',
 		},
 	},
+	{
+		to: '/create-character',
+		label: 'create character',
+		params: {
+			iconSrc: '',
+		},
+	},
 ]);
 
 export const Navigation = ({ className }: NavigationProps) => {

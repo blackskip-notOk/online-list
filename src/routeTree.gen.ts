@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpellsRouteImport } from './routes/spells'
+import { Route as CreateCharacterRouteImport } from './routes/create-character'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SpellsRoute = SpellsRouteImport.update({
   id: '/spells',
   path: '/spells',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateCharacterRoute = CreateCharacterRouteImport.update({
+  id: '/create-character',
+  path: '/create-character',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create-character': typeof CreateCharacterRoute
   '/spells': typeof SpellsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create-character': typeof CreateCharacterRoute
   '/spells': typeof SpellsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/create-character': typeof CreateCharacterRoute
   '/spells': typeof SpellsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/spells'
+  fullPaths: '/' | '/create-character' | '/spells'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/spells'
-  id: '__root__' | '/' | '/spells'
+  to: '/' | '/create-character' | '/spells'
+  id: '__root__' | '/' | '/create-character' | '/spells'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateCharacterRoute: typeof CreateCharacterRoute
   SpellsRoute: typeof SpellsRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/spells'
       fullPath: '/spells'
       preLoaderRoute: typeof SpellsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-character': {
+      id: '/create-character'
+      path: '/create-character'
+      fullPath: '/create-character'
+      preLoaderRoute: typeof CreateCharacterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateCharacterRoute: CreateCharacterRoute,
   SpellsRoute: SpellsRoute,
 }
 export const routeTree = rootRouteImport

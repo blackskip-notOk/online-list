@@ -8,9 +8,7 @@ import { logAppSettings } from './config/vite/logAppSetting';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, './config/env', 'PROJECT_');
-  console.log({ env })
   Object.assign(process.env, env);
-  console.log({ env: process.env  })
   
 	console.table(logAppSettings(mode));
 
