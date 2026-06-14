@@ -22,7 +22,7 @@ const options = linkOptions([
 		},
 	},
 	{
-		to: '/create-character',
+		to: '/create-character/class',
 		label: 'create character',
 		params: {
 			iconSrc: '',

@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SpellsRouteImport } from './routes/spells'
 import { Route as CreateCharacterRouteImport } from './routes/create-character'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreateCharacterClassRouteImport } from './routes/create-character.class'
+import { Route as CreateCharacterBackgroundRouteImport } from './routes/create-character.background'
 
 const SpellsRoute = SpellsRouteImport.update({
   id: '/spells',
@@ -28,34 +30,67 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreateCharacterClassRoute = CreateCharacterClassRouteImport.update({
+  id: '/class',
+  path: '/class',
+  getParentRoute: () => CreateCharacterRoute,
+} as any)
+const CreateCharacterBackgroundRoute =
+  CreateCharacterBackgroundRouteImport.update({
+    id: '/background',
+    path: '/background',
+    getParentRoute: () => CreateCharacterRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/create-character': typeof CreateCharacterRoute
+  '/create-character': typeof CreateCharacterRouteWithChildren
   '/spells': typeof SpellsRoute
+  '/create-character/background': typeof CreateCharacterBackgroundRoute
+  '/create-character/class': typeof CreateCharacterClassRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/create-character': typeof CreateCharacterRoute
+  '/create-character': typeof CreateCharacterRouteWithChildren
   '/spells': typeof SpellsRoute
+  '/create-character/background': typeof CreateCharacterBackgroundRoute
+  '/create-character/class': typeof CreateCharacterClassRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/create-character': typeof CreateCharacterRoute
+  '/create-character': typeof CreateCharacterRouteWithChildren
   '/spells': typeof SpellsRoute
+  '/create-character/background': typeof CreateCharacterBackgroundRoute
+  '/create-character/class': typeof CreateCharacterClassRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/create-character' | '/spells'
+  fullPaths:
+    | '/'
+    | '/create-character'
+    | '/spells'
+    | '/create-character/background'
+    | '/create-character/class'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/create-character' | '/spells'
-  id: '__root__' | '/' | '/create-character' | '/spells'
+  to:
+    | '/'
+    | '/create-character'
+    | '/spells'
+    | '/create-character/background'
+    | '/create-character/class'
+  id:
+    | '__root__'
+    | '/'
+    | '/create-character'
+    | '/spells'
+    | '/create-character/background'
+    | '/create-character/class'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CreateCharacterRoute: typeof CreateCharacterRoute
+  CreateCharacterRoute: typeof CreateCharacterRouteWithChildren
   SpellsRoute: typeof SpellsRoute
 }
 
@@ -82,12 +117,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/create-character/class': {
+      id: '/create-character/class'
+      path: '/class'
+      fullPath: '/create-character/class'
+      preLoaderRoute: typeof CreateCharacterClassRouteImport
+      parentRoute: typeof CreateCharacterRoute
+    }
+    '/create-character/background': {
+      id: '/create-character/background'
+      path: '/background'
+      fullPath: '/create-character/background'
+      preLoaderRoute: typeof CreateCharacterBackgroundRouteImport
+      parentRoute: typeof CreateCharacterRoute
+    }
   }
 }
 
+interface CreateCharacterRouteChildren {
+  CreateCharacterBackgroundRoute: typeof CreateCharacterBackgroundRoute
+  CreateCharacterClassRoute: typeof CreateCharacterClassRoute
+}
+
+const CreateCharacterRouteChildren: CreateCharacterRouteChildren = {
+  CreateCharacterBackgroundRoute: CreateCharacterBackgroundRoute,
+  CreateCharacterClassRoute: CreateCharacterClassRoute,
+}
+
+const CreateCharacterRouteWithChildren = CreateCharacterRoute._addFileChildren(
+  CreateCharacterRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CreateCharacterRoute: CreateCharacterRoute,
+  CreateCharacterRoute: CreateCharacterRouteWithChildren,
   SpellsRoute: SpellsRoute,
 }
 export const routeTree = rootRouteImport
