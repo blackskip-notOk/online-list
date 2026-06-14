@@ -1,5 +1,6 @@
-interface AbilityScore {
+export interface AbilityScore {
 	id: string;
+	ruName: string;
 	value: number;
 }
 
@@ -9,6 +10,7 @@ type Equipment = {
 };
 
 export interface Background {
+	id: string;
 	ability: AbilityScore[];
 	feat: string;
 	skill: string[];

@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { type ChangeEvent, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { create } from 'zustand';
-import type { Background } from '../types/background';
+import { useEffect } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import type { Character } from '../types/character';
 
 export const Route = createFileRoute('/create-character/background')({
 	component: RouteComponent,
@@ -139,100 +138,66 @@ const craftToolsList = [
 	},
 ];
 
-type State = {
-	abilities: Array<{ id: string; value: number }>;
-};
-
-type Action = {
-	updateAbilities: (updateAbilities: State['abilities']) => void;
-};
-
-const useAbilitiesStore = create<State & Action>((set) => ({
-	abilities: [],
-	updateAbilities: (updatedAbilities) => set({ abilities: updatedAbilities }),
-}));
-
 function RouteComponent() {
-	const [backgroundId, setBackGroundId] = useState('');
-	const [equipment, setEquipment] = useState('');
-	const [tool, setTool] = useState('');
+	const {
+		watch,
+		register,
+		setValue,
+		trigger,
+		formState: { errors },
+	} = useFormContext<Character>();
+	console.log(errors);
 
-	const selectedAbilities = useAbilitiesStore((state) => state.abilities);
-	const updateAbilities = useAbilitiesStore((state) => state.updateAbilities);
+	const { fields, replace } = useFieldArray<Character>({
+		name: 'background.ability',
+		rules: {
+			validate: (abilities) => {
+				const sum = abilities.reduce(
+					(acc, { value }) => acc + Number(value),
+					0,
+				);
 
-	const { watch, register, setValue } = useFormContext();
+				if (sum !== 3) {
+					return 'распредели правильно 3 очка характеристик';
+				}
 
-	const background = watch('background');
+				return sum === 3;
+			},
+		},
+	});
+
+	const backgroundId = watch('background.id');
 
 	const selectedBackGround = backgrounds.find(({ id }) => id === backgroundId);
-	const selectedAbilitiesValue = selectedAbilities.reduce(
-		(acc, { value }) => acc + value,
-		0,
-	);
-	const isCorrectBackground = !!background && typeof background === 'object';
-	const shouldSelectTool = selectedBackGround?.tool.type && !tool;
-	const disable =
-		!isCorrectBackground &&
-		(!backgroundId ||
-			selectedAbilitiesValue !== 3 ||
-			shouldSelectTool ||
-			!equipment);
 
-	const handleChangeBackgroud = (event: ChangeEvent<HTMLInputElement>) => {
-		setBackGroundId(event.target.value);
-	};
-
-	const handleChangeAbility = (event: ChangeEvent<HTMLInputElement>) => {
-		if (!selectedBackGround) {
-			return;
-		}
-
-		const newAbilities = selectedBackGround.abilities.map(({ id }) => {
-			if (id === event.target.id) {
-				return {
-					id,
-					value: Number(event.target.value),
-				};
-			}
-
-			const savedAbility = selectedAbilities.find(
-				(ability) => ability.id === id,
+	useEffect(() => {
+		if (backgroundId) {
+			const selectedBackGround = backgrounds.find(
+				({ id }) => id === backgroundId,
 			);
 
-			return {
+			if (!selectedBackGround) {
+				return;
+			}
+
+			const abilities = selectedBackGround.abilities.map(({ id, ruName }) => ({
 				id,
-				value: savedAbility?.value ?? 0,
-			};
-		});
+				ruName,
+				value: 0,
+			}));
 
-		updateAbilities(newAbilities);
-	};
-
-	const handleChangeEquipment = (event: ChangeEvent<HTMLInputElement>) => {
-		setEquipment(event.target.value);
-	};
-
-	const handleSelectTool = (event: ChangeEvent<HTMLSelectElement>) => {
-		setTool(event.target.value);
-	};
+			replace(abilities);
+		}
+	}, [backgroundId, replace]);
 
 	const handleSetBackground = () => {
-		const selectedEquipment = selectedBackGround?.equipment.find(
-			({ id }) => id === equipment,
+		trigger();
+
+		setValue('background.feat', selectedBackGround?.feat.id ?? '');
+		setValue(
+			'background.skill',
+			selectedBackGround?.skills.map(({ id }) => id) ?? [],
 		);
-
-		const newBackground: Background = {
-			ability: selectedAbilities,
-			feat: selectedBackGround?.feat.id ?? '',
-			skill: selectedBackGround?.skills.map(({ id }) => id) ?? [],
-			tool: selectedBackGround?.tool.id ?? '',
-			equipment: {
-				id: selectedEquipment?.id ?? '',
-				goldValue: selectedEquipment?.goldValue ?? 0,
-			},
-		};
-
-		setValue('background', newBackground);
 	};
 
 	return (
@@ -248,11 +213,10 @@ function RouteComponent() {
 					return (
 						<li key={id}>
 							<input
-								{...register('background')}
+								{...register('background.id')}
 								type="radio"
 								id={id}
 								value={id}
-								onChange={handleChangeBackgroud}
 							/>
 							<label htmlFor={id}>{ruName}</label>
 						</li>
@@ -268,37 +232,16 @@ function RouteComponent() {
 						трех на 1.
 					</span>
 					<ul>
-						{selectedBackGround.abilities.map(({ id, ruName }) => {
-							const isAnyHaveMaxValue = selectedAbilities.some(
-								({ value }) => value === 2,
-							);
-							const isMaxValue = selectedAbilitiesValue === 3;
-							const currentAbility = selectedAbilities.find(
-								(selectedAbility) => selectedAbility.id === id,
-							);
-							const shouldDisable = isMaxValue && !currentAbility?.value;
-
-							const getMax = () => {
-								if (shouldDisable) {
-									return 0;
-								}
-
-								if (isAnyHaveMaxValue || isMaxValue) {
-									return 1;
-								}
-
-								return 2;
-							};
-
+						{fields.map(({ id, ruName }, index) => {
 							return (
 								<li key={id}>
 									<label htmlFor={id}>{ruName} +</label>
 									<input
+										{...register(`background.ability.${index}.value`)}
 										type="number"
 										id={id}
 										min={0}
-										max={getMax()}
-										onChange={handleChangeAbility}
+										max={2}
 									/>
 								</li>
 							);
@@ -323,7 +266,7 @@ function RouteComponent() {
 					<div>{selectedBackGround.tool.ruName}</div>
 					<div>
 						{!!selectedBackGround.tool.type && (
-							<select name="tool" onChange={handleSelectTool}>
+							<select {...register('background.tool', { required: true })}>
 								{craftToolsList.map(({ id, ruName }) => {
 									return (
 										<option key={id} value={id}>
@@ -343,11 +286,10 @@ function RouteComponent() {
 							return (
 								<li key={id}>
 									<input
-										name="equipment"
+										{...register('background.equipment.id', { required: true })}
 										type="radio"
 										id={id}
 										value={id}
-										onChange={handleChangeEquipment}
 									/>
 									<label htmlFor={id}>
 										Тип {type}: {ruName}
@@ -358,8 +300,15 @@ function RouteComponent() {
 					</ul>
 				</div>
 			)}
+			{errors.background?.ability?.root?.message && (
+				<span>{errors.background?.ability?.root?.message}</span>
+			)}
 			<Link to="/create-character/class">Назад</Link>
-			<button type="button" disabled={disable} onClick={handleSetBackground}>
+			<button
+				type="button"
+				disabled={!backgroundId}
+				onClick={handleSetBackground}
+			>
 				Дальше
 			</button>
 		</main>

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useFormContext } from 'react-hook-form';
+import type { Character } from '../types/character';
 
 export const Route = createFileRoute('/create-character/class')({
 	component: RouteComponent,
@@ -17,7 +18,7 @@ const classes = [
 ];
 
 function RouteComponent() {
-	const { register, watch } = useFormContext();
+	const { register, watch } = useFormContext<Character>();
 
 	const classId = watch('class');
 
